@@ -14,9 +14,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration
 @ComponentScan
 @EntityScan
-public class ObadgeBackendApplication {
+public class OBadgeBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ObadgeBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        init();
+        SpringApplication.run(OBadgeBackendApplication.class, args);
+    }
+
+    /**
+     * Checks for environment variables etc.
+     */
+    private static void init() {
+        if(System.getenv("JWT_SECRET").trim().isEmpty()) {
+            System.err.println("Please set the JWT_SECRET environment variable.");
+            System.exit(1);
+        }
+    }
 }

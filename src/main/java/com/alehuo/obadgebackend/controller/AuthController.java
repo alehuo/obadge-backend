@@ -1,9 +1,13 @@
 package com.alehuo.obadgebackend.controller;
 
+import com.alehuo.obadgebackend.model.UserAccount;
+import com.alehuo.obadgebackend.repository.UserAccountRepository;
 import com.alehuo.obadgebackend.response.RestResponse;
+import com.alehuo.obadgebackend.service.CryptoService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -12,23 +16,64 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 @RestController
+@RequestMapping(value = "/api")
 public class AuthController {
+
+    @Autowired
+    private UserAccountRepository uaRepo;
+
+    @Autowired
+    private CryptoService cryptoService;
+
     /**
      * Authenticates a user. Returns a JWT that is valid for 7 days, used when making requests into routes that require authentication.
      */
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public RestResponse authenticate(@RequestParam String username, @RequestParam String password) {
+    public RestResponse authenticate(@RequestParam String email, @RequestParam String password) {
         String token = "";
         try {
-            // Create a new JSON Web Token with an expiration time of 7 days,
-            Algorithm algorithm = Algorithm.HMAC256("secret");
-            token = JWT.create()
-                    .withClaim("username", username)
-                    .withClaim("password", password)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
-                    .withIssuer("auth0")
-                    .sign(algorithm);
-            return new AuthenticationResponse(true, "Authentication successful", token);
+            UserAccount ua = uaRepo.findUserAccountByEmail(email);
+
+            // User account must be active and not banned
+            if (ua != null && !ua.isBanned() && ua.isActive()) {
+                String passwordHash = ua.getPassword();
+                if (cryptoService.matches(password, passwordHash)) {
+                    // Create a new JSON Web Token with an expiration time of 7 days,
+                    Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
+                    token = JWT.create()
+                            .withClaim("email", email)
+                            .withClaim("password", password)
+                            .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
+                            .withIssuer("auth0")
+                            .sign(algorithm);
+                    return new AuthenticationResponse(true, "Authentication successful", token);
+                } else {
+                    AuthenticationResponse ar = new AuthenticationResponse(false, "Authentication failed", token);
+                    ar.addError("Invalid email-address or password");
+
+                    return ar;
+                }
+
+
+            } else {
+
+                AuthenticationResponse ar = new AuthenticationResponse(false, "Authentication failed", token);
+
+                if (ua != null) {
+                    if (ua.isBanned()) {
+                        ar.addError("User account is banned");
+                    }
+                    if (!ua.isActive()) {
+                        ar.addError("User account is not active");
+                    }
+                } else {
+                    ar.addError("Invalid email-address or password");
+                }
+
+                return ar;
+            }
+
+
         } catch (UnsupportedEncodingException exception) {
             //UTF-8 encoding not supported
             return new AuthenticationResponse(false, "Authentication failed", token);
