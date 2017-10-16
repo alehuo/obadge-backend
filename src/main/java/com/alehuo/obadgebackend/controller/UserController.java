@@ -18,6 +18,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping(value = "/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -32,6 +33,7 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public UserResponse create(@RequestBody UserAccount userAccount) {
         userAccount.setPassword(cryptoService.encrypt(userAccount.getPassword()));
+        userAccount.setActive(true);
         UserAccount ua = userRepo.findUserAccountByEmail(userAccount.getEmail());
         if (ua == null) {
 

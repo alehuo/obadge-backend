@@ -2,6 +2,7 @@ package com.alehuo.obadgebackend.controller;
 
 import com.alehuo.obadgebackend.model.UserAccount;
 import com.alehuo.obadgebackend.repository.UserAccountRepository;
+import com.alehuo.obadgebackend.request.AuthenticationRequest;
 import com.alehuo.obadgebackend.response.RestResponse;
 import com.alehuo.obadgebackend.service.CryptoService;
 import com.auth0.jwt.JWT;
@@ -10,6 +11,8 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 import java.io.UnsupportedEncodingException;
@@ -17,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -29,8 +33,11 @@ public class AuthController {
      * Authenticates a user. Returns a JWT that is valid for 7 days, used when making requests into routes that require authentication.
      */
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public RestResponse authenticate(@RequestParam String email, @RequestParam String password) {
+    public RestResponse authenticate(@RequestBody AuthenticationRequest authRequest, HttpServletResponse response) {
         String token = "";
+        String email = authRequest.getEmail();
+        String password = authRequest.getPassword();
+
         try {
             UserAccount ua = uaRepo.findUserAccountByEmail(email);
 
@@ -46,6 +53,15 @@ public class AuthController {
                             .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
                             .withIssuer("auth0")
                             .sign(algorithm);
+
+                    // Cookie
+                    Cookie c = new Cookie("token", token);
+                    c.setHttpOnly(true);
+                    c.setSecure(true);
+                    c.setMaxAge(60*60*24*7);
+
+                    response.addCookie(c);
+
                     return new AuthenticationResponse(true, "Authentication successful", token);
                 } else {
                     AuthenticationResponse ar = new AuthenticationResponse(false, "Authentication failed", token);
