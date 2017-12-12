@@ -6,8 +6,9 @@
   "scripts": {
     "test": "mocha",
     "start": "tsc && node dist/app.js",
-    "migrate": "knex migrate:latest",
-    "seed": "knex seed:run"
+    "rollback-db": "knex migrate:rollback",
+    "migrate-db": "knex migrate:latest",
+    "seed-db": "knex seed:run"
   },
   "repository": {
     "type": "git",
