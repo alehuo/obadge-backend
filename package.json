@@ -1,0 +1,28 @@
+{
+  "name": "obadge-node-backend",
+  "version": "1.0.0",
+  "description": "Node.js back-end for Overall Badge Marketplace",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alehuo/obadge-backend.git"
+  },
+  "author": "alehuo <aleksi.huotala@helsinki.fi>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/alehuo/obadge-backend/issues"
+  },
+  "homepage": "https://github.com/alehuo/obadge-backend#readme",
+  "dependencies": {
+    "@types/knex": "^0.0.67",
+    "@types/node": "^8.0.58",
+    "express": "^4.16.2",
+    "knex": "^0.14.2",
+    "mocha": "^4.0.1",
+    "passport": "^0.4.0",
+    "typescript": "^2.6.2"
+  }
+}
