@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start": "tsc && node dist/app.js",
+    "start": "tsc && cross-env NODE_ENV=development node dist/app.js",
     "rollback-db": "knex migrate:rollback",
     "migrate-db": "knex migrate:latest",
     "seed-db": "knex seed:run"
@@ -31,6 +31,7 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
+    "cross-env": "^5.1.1",
     "express": "^4.16.2",
     "knex": "^0.14.2",
     "mocha": "^4.0.1",

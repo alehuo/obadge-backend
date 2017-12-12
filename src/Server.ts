@@ -5,6 +5,7 @@ import { Router } from 'express';
 import Controller from './interface/Controller';
 import defaultController from './controller/DefaultController';
 import userController from './controller/UserController';
+import authController from './controller/AuthController';
 
 export default class Server {
 
@@ -13,8 +14,10 @@ export default class Server {
     constructor(serverPort: number) {
         this.app = Express();
 
-        this.initRoutes();
         this.middleware();
+
+        this.initRoutes();
+       
 
         this.app.listen(serverPort, (cb: any) => {
             console.log('Listening on %d', serverPort);
@@ -23,7 +26,8 @@ export default class Server {
 
     private initRoutes() {
         this.app.use('/', defaultController);
-        this.app.use('/users', userController);
+        this.app.use('/api/users', userController);
+        this.app.use('/api/authentication', authController);
     }
 
     private middleware() {

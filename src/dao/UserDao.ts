@@ -1,27 +1,21 @@
 import Dao from './../interface/Dao';
 import User from './../model/User';
 import * as Promise from 'bluebird';
-import * as Knex from 'knex';
+import connect from './../Database';
 
 export default class UserDao implements Dao<User> {
 
-    private knex: Knex;
-
-    constructor(knex: Knex) {
-        this.knex = knex;
-    }
-
     findOne(id: number): Promise<User> {
-        throw new Error("Method not implemented.");
+        return connect().select().from('users').where({ id }).limit(1);
     }
     findAll(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+        return connect().select().from('users');
     }
     update(entity: User): Promise<User> {
         throw new Error("Method not implemented.");
     }
-    save(entity: User): Promise<User> {
-        throw new Error("Method not implemented.");
+    save(entity: User): Promise<number[]> {
+        return connect().insert(entity).into('users');
     }
     delete(id: number): boolean {
         throw new Error("Method not implemented.");
