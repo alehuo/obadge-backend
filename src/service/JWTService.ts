@@ -11,7 +11,7 @@ import * as jwt from "jsonwebtoken";
 let generate = (userData: User): Promise<string> => {
     return new Promise((resolve, reject) => {
         jwt.sign({
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * parseInt(process.env.JWT_EXPIRY)),
             data: JSON.stringify(userData)
         }, process.env.JWT_SECRET, (err, payload) => {
             if (err == null) {

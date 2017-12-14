@@ -1,12 +1,14 @@
 import * as Express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 import * as cors from 'cors';
 import { Router } from 'express';
 import Controller from './interface/Controller';
 import defaultController from './controller/DefaultController';
 import userController from './controller/UserController';
 import authController from './controller/AuthController';
+import connect from './Database';
 
 export default class Server {
 
@@ -42,7 +44,15 @@ export default class Server {
             extended: true
         }));
 
+        var store = require('connect-session-knex')(session);
+
+        // Session
+        this.app.use(session({
+            secret: process.env.SESSION_SECRET,
+            store: new store
+        }));
+
         // Use cookie parser middleware
-        this.app.use(cookieParser("SECRET_GOES_HERE"));
+        this.app.use(cookieParser(process.env.COOKIE_SECRET));
     }
 }
