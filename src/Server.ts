@@ -1,6 +1,7 @@
 import * as Express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
 import { Router } from 'express';
 import Controller from './interface/Controller';
 import defaultController from './controller/DefaultController';
@@ -32,6 +33,9 @@ export default class Server {
     private middleware() {
         // Body parser
         this.app.use(bodyParser.json());
+
+        // CORS
+        this.app.use(cors());
 
         // Use query string parser middlware
         this.app.use(bodyParser.urlencoded({

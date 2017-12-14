@@ -14,19 +14,25 @@ exports.seed = function (knex, Promise) {
           id: 1,
           email: adminEmail,
           password: adminPass,
-          admin: 1
+          admin: 1,
+          firstName: 'John',
+          lastName: 'Doe'
         },
         {
           id: 2,
           email: 'user2@email.com',
           password: 'abc123',
-          admin: 0
+          admin: 0,
+          firstName: 'John',
+          lastName: 'Doe'
         },
         {
           id: 3,
           email: 'user3@email.com',
           password: 'abc123',
-          admin: 0
+          admin: 0,
+          firstName: 'John',
+          lastName: 'Doe'
         }
       ]);
     });

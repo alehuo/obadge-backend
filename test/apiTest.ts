@@ -36,14 +36,17 @@ describe("UserController", () => {
             expect(user).to.have.property('id').eql(1);
             expect(user).to.have.property('email');
             expect(user).to.have.property('password');
+            expect(user).to.have.property('firstName');
+            expect(user).to.have.property('lastName');
+            expect(user).to.have.property('telephone');
             expect(user).to.have.property('admin');
             done();
         });
     });
     it("should be able to add users that do not exist", (done) => {
         for (let i = 0; i < 1000; i++) {
-            let [email, password] = createRandomUser();
-
+            let [email, password, firstName, lastName, telephone] = createRandomUser();
+ 
             chai.request(server).post('/api/users').send({
                 email, password
             }).end((err, res: ChaiHttp.Response) => {
@@ -60,6 +63,9 @@ describe("UserController", () => {
                 expect(user).to.have.property('id');
                 expect(user).to.have.property('email').eq(email);
                 expect(user).to.have.property('password').eq(password);
+                expect(user).to.have.property('firstName').eq(firstName);
+                expect(user).to.have.property('lastName').eq(lastName);
+                expect(user).to.have.property('telephone').eq(telephone);
                 expect(user).to.have.property('admin').eq(0);
             });
         }
@@ -74,7 +80,7 @@ describe("AuthController", () => {
             password: "HelloWorld"
         }).end((err, res: ChaiHttp.Response) => {
             let result: Message = res.body;
-            console.log(result);
+            
             expect(res).status(200);
             expect(res).header('content-type', 'application/json; charset=utf-8');
             expect(result).to.have.property('success').eq(true);
@@ -90,7 +96,7 @@ describe("AuthController", () => {
             password: "HelloWorld1"
         }).end((err, res: ChaiHttp.Response) => {
             let result: Message = res.body;
-            console.log(result);
+
             expect(res).status(401);
             expect(res).header('content-type', 'application/json; charset=utf-8');
             expect(result).to.have.property('success').eq(false);
@@ -101,11 +107,15 @@ describe("AuthController", () => {
 });
 
 let createRandomUser = (): string[] => {
-    let username: string = "tester_";
+    let email: string = "tester_";
     let randomNumber: number = Math.floor(5000000 * Math.random());
-    username += randomNumber + "@tester.com";
+    email += randomNumber + "@tester.com";
 
     let password: string = "Password123";
 
-    return [username, password];
+    let firstName: string = (Math.random() + 1).toString(36).substring(7);
+    let lastName: string = (Math.random() + 1).toString(36).substring(7);
+    let telephone: string = Math.floor((Math.random() * 50000000)).toString();
+
+    return [email, password, firstName, lastName, telephone];
 }

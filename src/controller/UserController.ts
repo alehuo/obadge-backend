@@ -31,6 +31,9 @@ class UserController extends Controller {
             let user: User = {
                 email: req.body.email,
                 password: req.body.password,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                telephone: req.body.telephone,
                 admin: 0
             }
             try {
