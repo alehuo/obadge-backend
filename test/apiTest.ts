@@ -1,5 +1,3 @@
-process.env.NODE_ENV = "development";
-
 import { expect } from "chai";
 import * as chai from "chai";
 import ChaiHttp = require("chai-http");
@@ -66,8 +64,6 @@ describe("AuthController", () => {
             expect(res).header('content-type', 'application/json; charset=utf-8');
             expect(result).to.have.property('success').eql(false);
             expect(result).to.have.property('message').eql('Authentication failure');
-            expect(result).to.have.property('payload');
-            expect(result.payload).to.be.empty;
             done();
         });
     });
