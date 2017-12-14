@@ -6,8 +6,7 @@
   "scripts": {
     "pretest": "cross-env NODE_ENV=test npm run-script init-db",
     "test": "tsc && cross-env NODE_ENV=test mocha dist/test",
-    "prestart": "npm run-script init-db",
-    "start": "tsc && node dist/src/app.js",
+    "start": "tsc && cross-env NODE_ENV=development node dist/src/app.js",
     "rollback-db": "knex migrate:rollback",
     "migrate-db": "knex migrate:latest",
     "seed-db": "knex seed:run",

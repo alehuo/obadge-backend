@@ -5,6 +5,10 @@ import Server from "./../src/Server";
 import User from "./../src/model/User";
 import Message from "./interface/Message";
 
+if (process.env.NODE_ENV != "test") {
+    throw "Please use 'test' as NODE_ENV to run tests";
+}
+
 var port = process.env.PORT || 8080;
 
 let should: Chai.Should = chai.should();
@@ -36,6 +40,31 @@ describe("UserController", () => {
             done();
         });
     });
+    it("should be able to add users that do not exist", (done) => {
+        for (let i = 0; i < 1000; i++) {
+            let [email, password] = createRandomUser();
+
+            chai.request(server).post('/api/users').send({
+                email, password
+            }).end((err, res: ChaiHttp.Response) => {
+
+                expect(res.body).to.have.property('success').eq(true);
+                expect(res.body).to.have.property('message').eq('New user inserted');
+                expect(res.body).to.have.property('payload');
+
+                let user: User = res.body.payload;
+                expect(res).status(201);
+                expect(res).header('content-type', 'application/json; charset=utf-8');
+                expect(user).not.undefined;
+                expect(user).not.null;
+                expect(user).to.have.property('id');
+                expect(user).to.have.property('email').eq(email);
+                expect(user).to.have.property('password').eq(password);
+                expect(user).to.have.property('admin').eq(0);
+            });
+        }
+        done();
+    });
 });
 
 describe("AuthController", () => {
@@ -45,10 +74,11 @@ describe("AuthController", () => {
             password: "HelloWorld"
         }).end((err, res: ChaiHttp.Response) => {
             let result: Message = res.body;
+            console.log(result);
             expect(res).status(200);
             expect(res).header('content-type', 'application/json; charset=utf-8');
-            expect(result).to.have.property('success').eql(true);
-            expect(result).to.have.property('message').eql('Authentication successful');
+            expect(result).to.have.property('success').eq(true);
+            expect(result).to.have.property('message').eq('Authentication successful');
             expect(result).to.have.property('payload');
             expect(result.payload).to.have.property('token');
             done();
@@ -60,11 +90,22 @@ describe("AuthController", () => {
             password: "HelloWorld1"
         }).end((err, res: ChaiHttp.Response) => {
             let result: Message = res.body;
+            console.log(result);
             expect(res).status(401);
             expect(res).header('content-type', 'application/json; charset=utf-8');
-            expect(result).to.have.property('success').eql(false);
-            expect(result).to.have.property('message').eql('Authentication failure');
+            expect(result).to.have.property('success').eq(false);
+            expect(result).to.have.property('message').eq('Authentication failure');
             done();
         });
     });
 });
+
+let createRandomUser = (): string[] => {
+    let username: string = "tester_";
+    let randomNumber: number = Math.floor(5000000 * Math.random());
+    username += randomNumber + "@tester.com";
+
+    let password: string = "Password123";
+
+    return [username, password];
+}
