@@ -23,7 +23,7 @@ class UserController extends Controller {
         // Get single
         this.router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
             let user: User = await this.userDao.findOne(req.params.id);
-            res.json(user);
+            res.json(user[0]);
             res.status(200);
         });
         // Add user
@@ -42,7 +42,7 @@ class UserController extends Controller {
                     message: "New user inserted",
                     payload: user
                 }
-                res.status(200);
+                res.status(201);
                 res.json(message);
 
             } catch (exception) {

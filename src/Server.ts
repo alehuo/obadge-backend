@@ -9,7 +9,7 @@ import authController from './controller/AuthController';
 
 export default class Server {
 
-    private app: Express.Application;
+    app: Express.Application;
 
     constructor(serverPort: number) {
         this.app = Express();
@@ -17,10 +17,9 @@ export default class Server {
         this.middleware();
 
         this.initRoutes();
-       
 
         this.app.listen(serverPort, (cb: any) => {
-            console.log('Listening on %d', serverPort);
+            //console.log('Listening on %d', serverPort);
         });
     }
 

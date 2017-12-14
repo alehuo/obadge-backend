@@ -3,6 +3,9 @@ import User from './../model/User';
 import * as Promise from 'bluebird';
 import connect from './../Database';
 
+/**
+ * User Data-access object (DAO).
+ */
 export default class UserDao implements Dao<User> {
 
     findOne(id: number): Promise<User> {
@@ -12,13 +15,17 @@ export default class UserDao implements Dao<User> {
         return connect().select().from('users');
     }
     update(entity: User): Promise<User> {
-        throw new Error("Method not implemented.");
+        return connect().update(entity);
     }
     save(entity: User): Promise<number[]> {
         return connect().insert(entity).into('users');
     }
-    delete(id: number): boolean {
-        throw new Error("Method not implemented.");
+    delete(id: number): Promise<boolean> {
+        return connect().delete().from('users').where({ id });
     }
-
+    findByEmailAndPassword(email: string, password: string): Promise<User> {
+        return connect().select().from('users').where({
+            email, password
+        }).limit(1);
+    }
 }

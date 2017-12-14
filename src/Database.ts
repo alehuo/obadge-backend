@@ -1,6 +1,7 @@
 import * as Promise from 'bluebird';
 import * as Knex from 'knex';
-const knexfile = require('./../knexfile');
+import * as path from 'path';
+const knexfile = require(path.resolve(__dirname + "/../../knexfile"));
 
 export default function connect(): Knex {
     if (process.env.NODE_ENV === undefined) {

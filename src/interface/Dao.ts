@@ -5,7 +5,7 @@ interface Dao<T> {
     findAll(): Promise<T[]>;
     update(entity: T): Promise<T | undefined>;
     save(entity: T): Promise<number[] | undefined>;
-    delete(id: number): boolean;
+    delete(id: number): Promise<boolean | undefined>;
 }
 
 export default Dao;

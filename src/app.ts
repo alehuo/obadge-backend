@@ -1,3 +1,9 @@
 import Server from "./Server";
 
-let app: Server = new Server(8080);
+let port: number = 8080;
+
+if (process.env.PORT != undefined) {
+    port = parseInt(process.env.PORT);
+}
+
+let app: Server = new Server(port);
