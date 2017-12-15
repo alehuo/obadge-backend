@@ -1,0 +1,8 @@
+language: nodejs
+deploy:
+  provider: heroku
+  api_key:
+    secure: bkJCyTkKO2SASUOPPiQqstdAg3ikNuk68oxY99rD0h6hYNhRB3TY0FT0KBmTsZW+yliFwmPSMn6zvCXkskejwtL7qJE9EWU8graXtTKmrBT/C9kxf82DTBRcUS85x9d2VbwKHCUduhpRRJvaRa5Z2cjYTrTaxFa/v8VWYyfjaC2fgtGll7JGmXB4Zcq6bJUttnH/zAh+LyKbDr/3kNE+rpthgKUcwJx4XYQ6HDzb+k4rmZbq5Z4Bl9E713mprBdqqMiSOtvfPV/AVClaRwl7JIHcFTTTujvuVh+AZ+ILynCwCicGaDmQ+rdS1sBAjxYaTkGr/yHkQkt2inyVltwebxgllLAvXHM+S21Zc3MJPxe0hL4glR8UTklWkd4kvGHMkKDAQ+Yl4GQWpJUhMIE2hnzr/UM+N8cyIUEr50TwEaD848U4o18v/2e3b0qOFXt7zKn3qCHtSg2Z6r+Jp8cSs7/YgDVyoGC7UymUh0uH8uHsdAWxe91hB0JgRz//hmnXrNZkKYxz1CRXzzF/HHpLQ+k0d5AwUqpXkWNKXsJvTTci2T5lXWXc3BNxZgOpKTmV+3ZuBNBoeB9D/mT7S3lm1YMYMNzMGpeWCos/hbMGi35+UpxELWtb+k9v6BLIPUToBrvUQQfzUw0L1rfEF4PjJPLc5+9+W6mcbx6p6w/WZGk=
+  app: 
+    development: badgemarketplace-api-dev
+    master: badgemarketplace-api
