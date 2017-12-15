@@ -9,7 +9,7 @@ if (process.env.PORT != undefined) {
     port = parseInt(process.env.PORT);
 }
 
-if(process.env.NODE_ENV == undefined) {
+if (process.env.NODE_ENV == undefined) {
     throw "Please define NODE_ENV before running the start command.";
 }
 

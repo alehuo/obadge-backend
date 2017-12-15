@@ -9,6 +9,7 @@ import defaultController from './controller/DefaultController';
 import userController from './controller/UserController';
 import authController from './controller/AuthController';
 import connect from './Database';
+import { AuthMiddleware } from './service/JWTService';
 
 export default class Server {
 

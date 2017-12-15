@@ -3,6 +3,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import UserDao from "./../dao/UserDao";
 import User from "../model/User";
 import Message from "../interface/Message";
+import { AuthMiddleware } from "../service/JWTService";
 
 class UserController extends Controller {
 
@@ -15,13 +16,13 @@ class UserController extends Controller {
 
     routes(): Router {
         // Get users
-        this.router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/', AuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
             let users: User[] = await this.userDao.findAll();
             res.json(users);
             res.status(200);
         });
         // Get single
-        this.router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/:id', AuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
             let user: User = await this.userDao.findOne(req.params.id);
             res.json(user[0]);
             res.status(200);
