@@ -10,6 +10,7 @@ import userController from './controller/UserController';
 import authController from './controller/AuthController';
 import connect from './Database';
 import { AuthMiddleware } from './service/JWTService';
+import bearerToken = require('express-bearer-token');
 
 export default class Server {
 
@@ -55,5 +56,7 @@ export default class Server {
 
         // Use cookie parser middleware
         this.app.use(cookieParser(process.env.COOKIE_SECRET));
+
+        this.app.use(bearerToken());
     }
 }

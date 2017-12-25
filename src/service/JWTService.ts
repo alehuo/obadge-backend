@@ -37,8 +37,21 @@ let verify = (token: string): Promise<User> => {
  * Authentication middleware to be used with Express.
  * @param options Options.
  */
-let AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if (req.session.secret == undefined || req.session.secret == null) {
+let AuthMiddleware = async (req: any, res: Response, next: NextFunction) => {
+    if (req.token !== undefined || req.token !== null) {
+        try {
+            let userData: User = await verify(req.token);
+            next();
+        } catch (err) {
+            res.status(401);
+            let msg = {} as Message;
+            msg = {
+                success: false,
+                message: "Authentication failure"
+            }
+            res.json(msg);
+        }
+    } else if (req.session.secret == undefined || req.session.secret == null) {
         res.status(401);
         let msg = {} as Message;
         msg = {
