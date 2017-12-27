@@ -47,3 +47,11 @@ HTTP 401 if incorrect credentials are entered
     "message" : "Authentication failure"
 }
 ```
+
+## License
+
+This project is licensed under GPLv3 license.
+
+## Authors
+
+- alehuo / Developer
