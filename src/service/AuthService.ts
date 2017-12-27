@@ -1,5 +1,6 @@
 /**
- * Service for generating JSON web tokens.
+ * Authentication service.
+ * @author alehuo
  */
 import User from "../model/User";
 import * as jwt from "jsonwebtoken";
@@ -38,20 +39,7 @@ let verify = (token: string): Promise<User> => {
  * @param options Options.
  */
 let AuthMiddleware = async (req: any, res: Response, next: NextFunction) => {
-    if (req.token !== undefined || req.token !== null) {
-        try {
-            let userData: User = await verify(req.token);
-            next();
-        } catch (err) {
-            res.status(401);
-            let msg = {} as Message;
-            msg = {
-                success: false,
-                message: "Authentication failure"
-            }
-            res.json(msg);
-        }
-    } else if (req.session.secret == undefined || req.session.secret == null) {
+    if (req.session.userId == undefined || req.session.userId == null) {
         res.status(401);
         let msg = {} as Message;
         msg = {
@@ -60,18 +48,10 @@ let AuthMiddleware = async (req: any, res: Response, next: NextFunction) => {
         }
         res.json(msg);
     } else {
-        try {
-            let userData: User = await verify(req.session.secret);
+        if (parseInt(req.session.userId) !== NaN) {
             next();
-        } catch (err) {
-            res.status(401);
-            let msg = {} as Message;
-            msg = {
-                success: false,
-                message: "Authentication failure"
-            }
-            res.json(msg);
         }
     }
 }
+
 export { AuthMiddleware, generate, verify };

@@ -8,29 +8,42 @@ import Controller from './interface/Controller';
 import defaultController from './controller/DefaultController';
 import userController from './controller/UserController';
 import authController from './controller/AuthController';
+import badgeController from './controller/BadgeController';
 import connect from './Database';
-import { AuthMiddleware } from './service/JWTService';
+import { AuthMiddleware } from './service/AuthService';
 import bearerToken = require('express-bearer-token');
 
+/**
+ * Server.
+ */
 export default class Server {
 
+    /**
+     * Express application instance.
+     */
     app: Express.Application;
 
     constructor(serverPort: number) {
         this.app = Express();
 
+        // Initialize middlewares
         this.middleware();
 
+        // Initialize routes
         this.initRoutes();
 
         this.app.listen(serverPort, (cb: any) => {
-            //console.log('Listening on %d', serverPort);
+            console.log('Listening on %d', serverPort);
         });
     }
 
+    /**
+     * Initializes the application's routes.
+     */
     private initRoutes() {
         this.app.use('/', defaultController);
         this.app.use('/api/users', userController);
+        this.app.use('/api/badges', badgeController);
         this.app.use('/api/authentication', authController);
     }
 
@@ -46,6 +59,7 @@ export default class Server {
             extended: true
         }));
 
+        // Knex session store
         var store = require('connect-session-knex')(session);
 
         // Session
@@ -57,6 +71,7 @@ export default class Server {
         // Use cookie parser middleware
         this.app.use(cookieParser(process.env.COOKIE_SECRET));
 
+        // Bearer token
         this.app.use(bearerToken());
     }
 }

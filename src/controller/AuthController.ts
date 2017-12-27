@@ -3,15 +3,15 @@ import { Router, Request, Response, NextFunction } from "express";
 import Message from "../interface/Message";
 import UserDao from "../dao/UserDao";
 import User from "../model/User";
-import { generate, verify } from "./../service/JWTService";
+import { generate, verify } from "./../service/AuthService";
 
+/**
+ * Authentication controller.
+ */
 class AuthController extends Controller {
 
-    private userDao: UserDao;
-
-    constructor() {
+    constructor(private userDao: UserDao) {
         super();
-        this.userDao = new UserDao();
     }
 
     public routes(): Router {
@@ -39,7 +39,7 @@ class AuthController extends Controller {
                             token: jwt
                         }
                     }
-                    req.session.secret = jwt;
+                    req.session.userId = user[0].id;
                 }
 
                 res.json(msg);
@@ -91,4 +91,4 @@ interface UserAuthenticationData {
     password: string
 }
 
-export default new AuthController().routes();
+export default new AuthController(new UserDao()).routes();

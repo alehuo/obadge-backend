@@ -3,15 +3,15 @@ import { Router, Request, Response, NextFunction } from "express";
 import UserDao from "./../dao/UserDao";
 import User from "../model/User";
 import Message from "../interface/Message";
-import { AuthMiddleware } from "../service/JWTService";
+import { AuthMiddleware } from "../service/AuthService";
 
+/**
+ * User controller.
+ */
 class UserController extends Controller {
 
-    private userDao: UserDao;
-
-    constructor() {
+    constructor(private userDao: UserDao) {
         super();
-        this.userDao = new UserDao();
     }
 
     routes(): Router {
@@ -62,4 +62,4 @@ class UserController extends Controller {
     }
 }
 
-export default new UserController().routes();
+export default new UserController(new UserDao()).routes();

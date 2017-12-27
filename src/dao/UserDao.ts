@@ -18,7 +18,7 @@ export default class UserDao implements Dao<User> {
         return connect().update(entity);
     }
     save(entity: User): Promise<number[]> {
-        return connect().insert(entity).into('users');
+        return connect().insert(entity).into('users').returning('id');
     }
     delete(id: number): Promise<boolean> {
         return connect().delete().from('users').where({ id });
