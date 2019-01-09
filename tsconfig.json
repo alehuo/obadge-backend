@@ -6,6 +6,8 @@
       "allowJs": true,
       "sourceMap": true,
       "removeComments": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
       "outDir": "./dist/",
       "rootDirs": [
         "src", "test"

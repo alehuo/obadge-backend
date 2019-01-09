@@ -1,16 +1,11 @@
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
 
 import Server from "./Server";
 
-let port: number = 8080;
+const port = Number(process.env.PORT || 8080);
 
-if (process.env.PORT != undefined) {
-    port = parseInt(process.env.PORT);
+if (!process.env.NODE_ENV) {
+  throw "Please define NODE_ENV before running the start command.";
 }
-
-if (process.env.NODE_ENV == undefined) {
-    throw "Please define NODE_ENV before running the start command.";
-}
-
-let app: Server = new Server(port);
+new Server(port);

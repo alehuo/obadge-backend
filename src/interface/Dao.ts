@@ -1,11 +1,9 @@
-import * as Promise from 'bluebird';
-
 interface Dao<T> {
-    findOne(id: number): Promise<T | undefined>;
-    findAll(): Promise<T[]>;
-    update(entity: T): Promise<T | undefined>;
-    save(entity: T): Promise<number[] | undefined>;
-    delete(id: number): Promise<boolean | undefined>;
+  findOne(id: number): PromiseLike<T | undefined>;
+  findAll(): PromiseLike<T[]>;
+  update(entity: T): PromiseLike<T | undefined>;
+  save(entity: T): PromiseLike<number[] | undefined>;
+  delete(id: number): PromiseLike<boolean | undefined>;
 }
 
 export default Dao;
