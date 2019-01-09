@@ -1,12 +1,12 @@
-import Express from "express";
 import cookieParser from "cookie-parser";
-import session from "express-session";
 import cors from "cors";
-import defaultController from "./controller/DefaultController";
-import userController from "./controller/UserController";
+import Express from "express";
+import bearerToken = require("express-bearer-token");
+import session from "express-session";
 import authController from "./controller/AuthController";
 import badgeController from "./controller/BadgeController";
-import bearerToken = require("express-bearer-token");
+import defaultController from "./controller/DefaultController";
+import userController from "./controller/UserController";
 
 /**
  * Server.
@@ -15,9 +15,9 @@ export default class Server {
   /**
    * Express application instance.
    */
-  private app: Express.Application;
+  public app: Express.Application;
 
-  constructor(serverPort: number) {
+  constructor(private readonly serverPort: number) {
     this.app = Express();
 
     // Initialize middlewares
@@ -25,9 +25,11 @@ export default class Server {
 
     // Initialize routes
     this.initRoutes();
+  }
 
-    this.app.listen(serverPort, (cb: any) => {
-      console.log("Listening on %d", serverPort);
+  public start() {
+    this.app.listen(this.serverPort, (cb) => {
+      console.log("Listening on %d", this.serverPort);
     });
   }
 
@@ -49,14 +51,14 @@ export default class Server {
     this.app.use(Express.urlencoded({ extended: true }));
 
     // Knex session store
-    var store = require("connect-session-knex")(session);
+    const store = require("connect-session-knex")(session);
 
     // Session
     this.app.use(
       session({
         secret: process.env.SESSION_SECRET,
-        store: new store()
-      })
+        store: new store(),
+      }),
     );
 
     // Use cookie parser middleware

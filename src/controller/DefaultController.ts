@@ -1,5 +1,5 @@
-import Controller from "../interface/Controller";
 import { Router } from "express";
+import Controller from "../interface/Controller";
 
 /**
  * Default controller.

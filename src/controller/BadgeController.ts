@@ -1,9 +1,9 @@
-import Controller from "../interface/Controller";
 import { Router } from "express";
-import BadgeDao from "./../dao/BadgeDao";
+import Controller from "../interface/Controller";
 import Message from "../interface/Message";
-import { AuthMiddleware } from "../service/AuthService";
 import Badge from "../model/Badge";
+import { AuthMiddleware } from "../service/AuthService";
+import BadgeDao from "./../dao/BadgeDao";
 
 import * as jwt from "jsonwebtoken";
 
@@ -15,46 +15,46 @@ class BadgeController extends Controller {
     super();
   }
 
-  routes(): Router {
+  public routes(): Router {
     // Get badges
     this.router.get("/", AuthMiddleware, async (req, res, next) => {
-      let badges: Badge[] = await this.badgeDao.findAll();
+      const badges: Badge[] = await this.badgeDao.findAll();
       res.json(badges);
       res.status(200);
     });
     // Get single badge
     this.router.get("/:id", AuthMiddleware, async (req, res, next) => {
-      let badge: Badge = await this.badgeDao.findOne(req.params.id);
+      const badge: Badge = await this.badgeDao.findOne(req.params.id);
       res.json(badge[0]);
       res.status(200);
     });
     // Add badge
     this.router.post("/", AuthMiddleware, async (req, res, next) => {
-      let user: any = jwt.decode(req.session.secret);
+      const user: any = jwt.decode(req.session.secret);
 
-      let badge: Badge = {
+      const badge: Badge = {
         title: req.body.title,
         description: req.body.description,
         pricePerUnit: req.body.pricePerUnit,
         stock: req.body.stock,
-        userId: req.session.userId
+        userId: req.session.userId,
       };
 
       try {
-        let badgeId: number[] = await this.badgeDao.save(badge);
+        const badgeId: number[] = await this.badgeDao.save(badge);
         badge.id = badgeId[0];
 
-        let message: Message = {
+        const message: Message = {
           success: true,
           message: "New badge inserted",
-          payload: badge
+          payload: badge,
         };
         res.status(201);
         res.json(message);
       } catch (exception) {
-        let message: Message = {
+        const message: Message = {
           success: false,
-          message: "Error adding new badge"
+          message: "Error adding new badge",
         };
         res.status(503);
         res.json(message);

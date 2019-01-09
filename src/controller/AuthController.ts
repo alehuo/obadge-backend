@@ -1,7 +1,7 @@
-import Controller from "../interface/Controller";
 import { Router } from "express";
-import Message from "../interface/Message";
 import UserDao from "../dao/UserDao";
+import Controller from "../interface/Controller";
+import Message from "../interface/Message";
 import User from "../model/User";
 import { generate, verify } from "./../service/AuthService";
 
@@ -16,30 +16,30 @@ class AuthController extends Controller {
   public routes(): Router {
     // Authentication endpoint
     this.router.post("/", async (req, res, next) => {
-      let userData: UserAuthenticationData = req.body;
+      const userData: UserAuthenticationData = req.body;
       try {
-        let user: User = await this.userDao.findByEmailAndPassword(
+        const user: User = await this.userDao.findByEmailAndPassword(
           userData.email,
-          userData.password
+          userData.password,
         );
         let msg = {} as Message;
-        if (user[0] == undefined) {
+        if (user[0] === undefined) {
           res.status(401);
           msg = {
             success: false,
-            message: "Authentication failure"
+            message: "Authentication failure",
           };
         } else {
           res.status(200);
 
-          let jwt: string = await generate(user);
+          const jwt = await generate(user);
 
           msg = {
             success: true,
             message: "Authentication successful",
             payload: {
-              token: jwt
-            }
+              token: jwt,
+            },
           };
           req.session.userId = user[0].id;
         }
@@ -49,7 +49,7 @@ class AuthController extends Controller {
         res.status(401);
         res.json({
           success: false,
-          message: "Authentication failure"
+          message: "Authentication failure",
         });
       }
     });
@@ -59,25 +59,25 @@ class AuthController extends Controller {
       let msg = {} as Message;
       if (req.session.secret != null) {
         try {
-          let userData: User = await verify(req.session.secret);
+          const userData = await verify(req.session.secret);
           res.status(200);
           msg = {
             message: "Authentication successful",
             success: true,
-            payload: userData
+            payload: userData,
           };
         } catch (err) {
           res.status(401);
           msg = {
             message: "Authentication failure",
-            success: false
+            success: false,
           };
         }
       } else {
         res.status(401);
         msg = {
           message: "Authentication failure",
-          success: false
+          success: false,
         };
       }
       res.json(msg);

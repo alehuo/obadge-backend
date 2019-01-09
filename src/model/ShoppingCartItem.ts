@@ -1,6 +1,6 @@
 export default interface ShoppingCartItem {
-    id?: number,
-    userId: number,
-    badgeId: number,
-    amount: number
+  id?: number;
+  userId: number;
+  badgeId: number;
+  amount: number;
 }

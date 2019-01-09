@@ -6,6 +6,8 @@ import Server from "./Server";
 const port = Number(process.env.PORT || 8080);
 
 if (!process.env.NODE_ENV) {
-  throw "Please define NODE_ENV before running the start command.";
+  throw new Error("Please define NODE_ENV before running the start command.");
 }
-new Server(port);
+
+const server = new Server(port);
+server.start();

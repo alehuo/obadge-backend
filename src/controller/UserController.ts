@@ -1,9 +1,9 @@
-import Controller from "../interface/Controller";
 import { Router } from "express";
-import UserDao from "./../dao/UserDao";
-import User from "../model/User";
+import Controller from "../interface/Controller";
 import Message from "../interface/Message";
+import User from "../model/User";
 import { AuthMiddleware } from "../service/AuthService";
+import UserDao from "./../dao/UserDao";
 
 /**
  * User controller.
@@ -13,44 +13,44 @@ class UserController extends Controller {
     super();
   }
 
-  routes(): Router {
+  public routes(): Router {
     // Get users
     this.router.get("/", AuthMiddleware, async (req, res, next) => {
-      let users: User[] = await this.userDao.findAll();
+      const users = await this.userDao.findAll();
       res.json(users);
       res.status(200);
     });
     // Get single
     this.router.get("/:id", AuthMiddleware, async (req, res, next) => {
-      let user: User = await this.userDao.findOne(req.params.id);
+      const user = await this.userDao.findOne(req.params.id);
       res.json(user[0]);
       res.status(200);
     });
     // Add user
     this.router.post("/", async (req, res, next) => {
-      let user: User = {
+      const user: User = {
         email: req.body.email,
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         telephone: req.body.telephone,
-        admin: 0
+        admin: 0,
       };
       try {
-        let userId: number[] = await this.userDao.save(user);
+        const userId = await this.userDao.save(user);
         user.id = userId[0];
 
-        let message: Message = {
+        const message: Message = {
           success: true,
           message: "New user inserted",
-          payload: user
+          payload: user,
         };
         res.status(201);
         res.json(message);
       } catch (exception) {
-        let message: Message = {
+        const message: Message = {
           success: false,
-          message: "Error adding new user"
+          message: "Error adding new user",
         };
         res.status(503);
         res.json(message);

@@ -4,13 +4,14 @@
   "description": "Node.js back-end for Overall Badge Marketplace",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run-script init-db",
-    "test": "mocha",
+    "pretest": "yarn init-db",
+    "test": "mocha --require ts-node/register test/**/*.ts",
     "start": "ts-node src/app.ts",
     "rollback-db": "knex migrate:rollback",
     "migrate-db": "knex migrate:latest",
     "seed-db": "knex seed:run",
-    "init-db": "knex migrate:latest && knex seed:run"
+    "init-db": "knex migrate:latest && knex seed:run",
+    "lint": "tslint --project tsconfig.json"
   },
   "repository": {
     "type": "git",

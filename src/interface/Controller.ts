@@ -9,5 +9,5 @@ export default abstract class Controller {
         this.router = Express.Router();
     }
 
-    abstract routes(): Router;
+    public abstract routes(): Router;
 }

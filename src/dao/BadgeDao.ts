@@ -7,46 +7,46 @@ import connect from "./../Database";
  * Badge Data-access object (DAO).
  */
 export default class UserDao implements Dao<Badge> {
-  findOne(id: number): PromiseLike<Badge> {
+  public findOne(id: number): PromiseLike<Badge> {
     return connect()
       .select()
       .from("badges")
       .where({ id })
       .limit(1);
   }
-  findAll(): PromiseLike<Badge[]> {
+  public findAll(): PromiseLike<Badge[]> {
     return connect()
       .select()
       .from("badges");
   }
-  update(entity: Badge): PromiseLike<Badge> {
+  public update(entity: Badge): PromiseLike<Badge> {
     return connect().update(entity);
   }
-  save(entity: Badge): PromiseLike<number[]> {
+  public save(entity: Badge): PromiseLike<number[]> {
     return connect()
       .insert(entity)
       .into("badges")
       .returning("id");
   }
-  delete(id: number): PromiseLike<boolean> {
+  public delete(id: number): PromiseLike<boolean> {
     return connect()
       .delete()
       .from("badges")
       .where({ id });
   }
-  findByUserId(userId: number): PromiseLike<Badge[]> {
+  public findByUserId(userId: number): PromiseLike<Badge[]> {
     return connect()
       .select()
       .from("badges")
       .where({ userId });
   }
-  findByInStock(): PromiseLike<Badge[]> {
+  public findByInStock(): PromiseLike<Badge[]> {
     return connect()
       .select()
       .from("badges")
       .where("stock", ">", 0);
   }
-  findByInStockAndUserId(userId: number): PromiseLike<Badge[]> {
+  public findByInStockAndUserId(userId: number): PromiseLike<Badge[]> {
     return connect()
       .select()
       .from("badges")

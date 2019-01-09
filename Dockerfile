@@ -16,6 +16,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY tsconfig.json ./
+COPY knexfile.js ./
 COPY ./migrations migrations
 COPY ./seeds seeds
 COPY ./src src
