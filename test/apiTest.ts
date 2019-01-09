@@ -1,28 +1,38 @@
-import * as dotenv from "dotenv";
-dotenv.config();
 process.env.NODE_ENV = "test";
 
 import { expect } from "chai";
 import chai from "chai";
 import ChaiHttp = require("chai-http");
+import * as Database from "../src/Database";
+import app from "./../src/App";
 import User from "./../src/model/User";
-import Server from "./../src/Server";
-
 if (process.env.NODE_ENV !== "test") {
   throw new Error("Please use 'test' as NODE_ENV to run tests");
 }
 
 const should: Chai.Should = chai.should();
-
-const server = new Server(8080).app;
-
+const knex = Database.connect();
 chai.use(ChaiHttp);
 
 describe("UserController", () => {
+  // Roll back
+  beforeEach(async function() {
+    this.timeout(60 * 1000);
+    await knex.migrate.rollback();
+    await knex.migrate.latest();
+    await knex.seed.run();
+  });
+
+  // After each
+  afterEach(async function() {
+    this.timeout(60 * 1000);
+    await knex.migrate.rollback();
+  });
+
   it("should get all users", (done) => {
     authenticate("user1@email.com", "HelloWorld").then((token) => {
       chai
-        .request(server)
+        .request(app)
         .get("/api/users")
         .set("Authorization", "Bearer " + token)
         .then((res: ChaiHttp.Response) => {
@@ -32,7 +42,7 @@ describe("UserController", () => {
           done();
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
         });
     });
   });
@@ -40,7 +50,7 @@ describe("UserController", () => {
     authenticate("user1@email.com", "HelloWorld")
       .then((token) => {
         chai
-          .request(server)
+          .request(app)
           .get("/api/users/1")
           .set("Authorization", "Bearer " + token)
           .then((res: ChaiHttp.Response) => {
@@ -64,11 +74,11 @@ describe("UserController", () => {
             done();
           })
           .catch((err) => {
-            console.error(err);
+            // console.error(err);
           });
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
       });
   });
   it("should be able to add users that do not exist", (done) => {
@@ -82,7 +92,7 @@ describe("UserController", () => {
       ] = createRandomUser();
 
       chai
-        .request(server)
+        .request(app)
         .post("/api/users")
         .send({
           email,
@@ -123,7 +133,7 @@ describe("UserController", () => {
             .eq(0);
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
         });
     }
     done();
@@ -145,7 +155,7 @@ describe("AuthController", () => {
             expect(result.payload).to.have.property('token');
             done();
         }).catch((err) => {
-            console.error(err);
+            //console.error(err);
         });
     });
 
@@ -177,7 +187,7 @@ describe("AuthController", () => {
 const authenticate = (email: string, password: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     chai
-      .request(server)
+      .request(app)
       .post("/api/authentication")
       .send({
         email,
