@@ -1,53 +1,53 @@
 import Dao from "../interface/Dao";
 import Badge from "../model/Badge";
 
-import connect from "./../Database";
+import * as Database from "./../Database";
+
+const knex = Database.connect();
 
 /*
  * Badge Data-access object (DAO).
  */
 export default class UserDao implements Dao<Badge> {
   public findOne(id: number): PromiseLike<Badge> {
-    return connect()
+    return knex
       .select()
       .from("badges")
       .where({ id })
       .limit(1);
   }
   public findAll(): PromiseLike<Badge[]> {
-    return connect()
-      .select()
-      .from("badges");
+    return knex.select().from("badges");
   }
   public update(entity: Badge): PromiseLike<Badge> {
-    return connect().update(entity);
+    return knex.update(entity);
   }
   public save(entity: Badge): PromiseLike<number[]> {
-    return connect()
+    return knex
       .insert(entity)
       .into("badges")
       .returning("id");
   }
   public delete(id: number): PromiseLike<boolean> {
-    return connect()
+    return knex
       .delete()
       .from("badges")
       .where({ id });
   }
   public findByUserId(userId: number): PromiseLike<Badge[]> {
-    return connect()
+    return knex
       .select()
       .from("badges")
       .where({ userId });
   }
   public findByInStock(): PromiseLike<Badge[]> {
-    return connect()
+    return knex
       .select()
       .from("badges")
       .where("stock", ">", 0);
   }
   public findByInStockAndUserId(userId: number): PromiseLike<Badge[]> {
-    return connect()
+    return knex
       .select()
       .from("badges")
       .where("stock", ">", 0)
